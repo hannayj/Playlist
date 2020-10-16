@@ -1,0 +1,53 @@
+<!DOCTYPE htlm>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}"/> 
+<head>
+	<title>Workout Playlist</title>
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+</head>
+
+<body>
+	<div class="container">
+		<form th:action="@{/logout}" method="post">
+			<span class="float-right">
+			<input type="submit" value="Sign out" class="btn btn-danger"/>
+			</span>
+		</form>	
+	</div>
+	
+	<div class="container">
+	<h1>Workout Playlist</h1>
+	<h4 th:inline="text">Welcome [[${#httpServletRequest.remoteUser}]]</h4>
+	</div>
+	
+	<div class="container">
+	<table class="table table-striped">
+	
+		<tr>
+			<th>Song</th>
+			<th>Artist</th>
+			<th>Album</th>
+			<th>Length</th>
+			<th>Year</th>
+			<th>Style</th>
+			<th></th>
+			<th></th>
+			<th sec:authorize="hasRole('ADMIN')"></th>
+		</tr>
+		<tr th:each = "song : ${songs}">
+			<td th:text = "${song.name}"></td>
+			<td th:text = "${song.artist}"></td>
+			<td th:text = "${song.album}"></td>
+			<td th:text = "${song.length}"></td>
+			<td th:text = "${song.year}"></td>
+			<td th:text = "${song.style.name}"></td>
+			<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/delete/{id}(id=${song.id})}" class="btn btn-danger">Delete</a></td>
+			<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/edit/{id}(id=${song.id})}" class="btn btn-info">Edit</a></td>
+		</tr>
+	</table>
+	<div sec:authorize="hasAuthority('ADMIN')">
+	<a href="/add" class="btn btn-success">Add new song</a>
+	</div>
+	</div>
+</body>
+</html>
